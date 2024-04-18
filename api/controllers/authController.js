@@ -1,11 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../../lib/prisma.js";
+import prisma from "../lib/prisma.js";
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
 
   const hashpassword = await bcrypt.hash(password, 10);
-  console.log(hashpassword);
 
   const newUser = await prisma.user.create({
     data: {
@@ -14,7 +13,7 @@ export const register = async (req, res) => {
       password: hashpassword,
     },
   });
-  console.log(newUser);
+  res.status(201).json({ data: newUser });
 };
 
 export const login = async (req, res) => {
@@ -31,21 +30,20 @@ export const login = async (req, res) => {
     res;
     // .setHeader("set-Cookie", "test=" + "myValue")
     //.json("successfully access");
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const age = 1000 * 60 * 60 * 24 * 7;
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
       expiresIn: age,
     });
-    const age = 1000 * 60 * 60 * 24 * 7
-
-
-    res
+    const {password: userPassword, ...userInfo} = user
+     res
       .cookie("token" + token, { httpOnly: true, maxAge: age })
       .status(200)
-      .json({ message: "Logged In Successfully" });
+      .json(userInfo);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to login " });
   }
 };
 export const logout = (req, res) => {
-  res.clearCookie("token").status(200).json({message:"logout successfully"})
+  res.clearCookie("token").status(200).json({ message: "logout successfully" });
 };
