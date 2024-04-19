@@ -9,6 +9,7 @@ app.use(cors({origin: 'http://127.0.0.1:5173',credentials: true}));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/posts", postRoute);
+app.use("api/auth", authRoute);
 app.use("/api/test", testRoute);
 app.listen(4000, () => {
   console.log("server is running");

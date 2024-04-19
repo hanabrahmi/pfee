@@ -1,6 +1,6 @@
 import "./register.scss";
 import { Link, useNavigate } from "react-router-dom";
-//import axios from "axios";
+import axios from "axios";
 import { useState } from "react";
 import apiRequest from "../../lib/apiRequest";
 
@@ -27,9 +27,9 @@ function Register() {
       console.log(res);
       navigate("/login");
     } catch (err) {
-      // setError(err.response.data.message);
+      setError(err.response.data.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
   return (
@@ -40,7 +40,7 @@ function Register() {
           <input name="username" type="text" placeholder="Username" />
           <input name="email" type="text" placeholder="Email" />
           <input name="password" type="password" placeholder="Password" />
-          <button disabled ={isLoading} >Register</button>
+          <button disabled={isLoading}>Register</button>
           {error && <span>{error}</span>}
           <Link to="/login">Do you have an account?</Link>
         </form>
